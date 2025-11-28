@@ -1,0 +1,33 @@
+{
+  "generator-jhipster": {
+    "applicationType": "monolith",
+    "authenticationType": "jwt",
+    "baseName": "chatapp",
+    "buildTool": "maven",
+    "cacheProvider": null,
+    "clientFramework": "angular",
+    "clientTestFrameworks": [],
+    "clientTheme": "none",
+    "creationTimestamp": 1764314171269,
+    "databaseType": "cassandra",
+    "devDatabaseType": null,
+    "enableHibernateCache": null,
+    "enableTranslation": true,
+    "entities": [],
+    "feignClient": null,
+    "jhipsterVersion": "8.11.0",
+    "jwtSecretKey": "NmQ1YmQzMzk4YWJkYTllNTMyZWM0N2RjNDM2OGZiNGQ2ZDA1M2I5YjY0NGRiNWQ5NzM3YTc1YzczODI0ZDQ5M2ZmYzFkOTI5YjM2MTQ3NWM3ODhhOWYyYzVkZjhhMmI4NWIyMzNmMTNlNjcyYmVhNjI5ZDUzMzRkNzA0MDQwOTc=",
+    "languages": ["vi"],
+    "microfrontend": null,
+    "microfrontends": [],
+    "nativeLanguage": "vi",
+    "packageName": "app",
+    "prodDatabaseType": null,
+    "reactive": true,
+    "serverPort": null,
+    "serviceDiscoveryType": null,
+    "syncUserWithIdp": null,
+    "testFrameworks": [],
+    "withAdminUi": true
+  }
+}
