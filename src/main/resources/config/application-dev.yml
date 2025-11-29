@@ -35,6 +35,12 @@ spring:
     compression: LZ4
     keyspace-name: chatapp
     local-datacenter: datacenter1
+    schema-action: CREATE_IF_NOT_EXISTS
+    request:
+      timeout: 10s
+    connection:
+      connect-timeout: 10s
+      init-query-timeout: 10s
   mail:
     host: localhost
     port: 25

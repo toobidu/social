@@ -12,11 +12,13 @@ import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.data.cassandra.config.EnableCassandraAuditing;
 import org.springframework.data.cassandra.core.convert.CassandraCustomConversions;
 import org.springframework.data.convert.ReadingConverter;
 import org.springframework.data.convert.WritingConverter;
 
 @Configuration
+@EnableCassandraAuditing
 public class DatabaseConfiguration {
 
     @Bean

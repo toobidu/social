@@ -47,6 +47,13 @@ public class User implements Serializable {
     @Size(min = 5, max = 254)
     private String email;
 
+    @Size(max = 256)
+    @Column("avatar_url")
+    private String avatarUrl;
+
+    @Size(max = 1000)
+    private String bio;
+
     private boolean activated = false;
 
     @Size(min = 2, max = 10)
@@ -116,6 +123,22 @@ public class User implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
+
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
+    }
+
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
     }
 
     public boolean isActivated() {
