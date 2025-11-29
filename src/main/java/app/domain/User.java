@@ -13,13 +13,16 @@ import java.util.Locale;
 import java.util.Set;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.cassandra.core.mapping.Column;
+import org.springframework.data.cassandra.core.mapping.Indexed;
 import org.springframework.data.cassandra.core.mapping.PrimaryKey;
 import org.springframework.data.cassandra.core.mapping.Table;
+import org.springframework.data.elasticsearch.annotations.Document;
 
 /**
  * Người dùng.
  */
 @Table("user")
+@Document(indexName = "user")
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -30,6 +33,7 @@ public class User implements Serializable {
     @NotNull
     @Pattern(regexp = Constants.LOGIN_REGEX)
     @Size(min = 1, max = 50)
+    @Indexed
     private String login; // Tên đăng nhập
 
     @JsonIgnore
@@ -45,6 +49,7 @@ public class User implements Serializable {
 
     @Email
     @Size(min = 5, max = 254)
+    @Indexed
     private String email; // Email
 
     @Size(max = 256)
@@ -76,11 +81,13 @@ public class User implements Serializable {
     @Size(max = 20)
     @Column("activation_key")
     @JsonIgnore
+    @Indexed
     private String activationKey; // Mã kích hoạt
 
     @Size(max = 20)
     @Column("reset_key")
     @JsonIgnore
+    @Indexed
     private String resetKey; // Mã đặt lại mật khẩu
 
     @Column("reset_date")

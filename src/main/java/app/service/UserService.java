@@ -29,10 +29,17 @@ public class UserService {
 
     private final UserRepository userRepository;
 
+    private final app.repository.search.UserSearchRepository userSearchRepository;
+
     private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(
+        UserRepository userRepository,
+        app.repository.search.UserSearchRepository userSearchRepository,
+        PasswordEncoder passwordEncoder
+    ) {
         this.userRepository = userRepository;
+        this.userSearchRepository = userSearchRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -214,7 +221,7 @@ public class UserService {
     }
 
     private Mono<User> saveUser(User user) {
-        return userRepository.save(user);
+        return userRepository.save(user).flatMap(savedUser -> userSearchRepository.save(savedUser).thenReturn(savedUser));
     }
 
     public Mono<Void> changePassword(String currentClearTextPassword, String newPassword) {

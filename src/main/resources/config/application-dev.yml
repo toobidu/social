@@ -27,6 +27,10 @@ spring:
       additional-exclude: static/**
     livereload:
       enabled: false # we use Webpack dev server + BrowserSync for livereload
+  docker:
+    compose:
+      file: src/main/docker/services.yml
+      lifecycle-management: start-only
   jackson:
     serialization:
       indent-output: true
@@ -41,6 +45,12 @@ spring:
     connection:
       connect-timeout: 10s
       init-query-timeout: 10s
+  elasticsearch:
+    uris: http://localhost:9200
+    socket-timeout: 30s
+    path-prefix: /
+    username: elastic
+    password: changeme
   mail:
     host: localhost
     port: 25

@@ -9,11 +9,13 @@ import java.util.UUID;
 import org.springframework.data.cassandra.core.mapping.Column;
 import org.springframework.data.cassandra.core.mapping.PrimaryKey;
 import org.springframework.data.cassandra.core.mapping.Table;
+import org.springframework.data.elasticsearch.annotations.Document;
 
 /**
  * Bài viết.
  */
 @Table("posts")
+@Document(indexName = "post")
 public class Post extends AbstractAuditingEntity<Post> implements Serializable {
 
     private static final long serialVersionUID = 1L;

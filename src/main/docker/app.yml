@@ -33,3 +33,7 @@ services:
     extends:
       file: ./cassandra.yml
       service: cassandra-migration
+  elasticsearch:
+    extends:
+      file: ./elasticsearch.yml
+      service: elasticsearch
