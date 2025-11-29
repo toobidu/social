@@ -9,7 +9,7 @@ import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn;
 import org.springframework.data.cassandra.core.mapping.Table;
 
 /**
- * The News Feed.
+ * Bảng tin.
  */
 @Table("news_feed")
 public class NewsFeed implements Serializable {
@@ -17,21 +17,21 @@ public class NewsFeed implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @PrimaryKeyColumn(name = "user_id", ordinal = 0, type = PrimaryKeyType.PARTITIONED)
-    private UUID userId;
+    private UUID userId; // ID người dùng (chủ sở hữu bảng tin)
 
     @PrimaryKeyColumn(name = "post_id", ordinal = 1, type = PrimaryKeyType.CLUSTERED, ordering = Ordering.DESCENDING)
-    private UUID postId;
+    private UUID postId; // ID bài viết
 
     @Column("author_id")
-    private UUID authorId;
+    private UUID authorId; // ID tác giả bài viết
 
     @Column("author_name")
-    private String authorName;
+    private String authorName; // Tên tác giả
 
     @Column("author_avatar")
-    private String authorAvatar;
+    private String authorAvatar; // Avatar tác giả
 
-    private String snippet;
+    private String snippet; // Trích dẫn nội dung bài viết
 
     public UUID getUserId() {
         return userId;

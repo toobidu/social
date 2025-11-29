@@ -9,7 +9,7 @@ import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn;
 import org.springframework.data.cassandra.core.mapping.Table;
 
 /**
- * A Friend relationship.
+ * Mối quan hệ bạn bè.
  */
 @Table("friends")
 public class Friend implements Serializable {
@@ -17,18 +17,18 @@ public class Friend implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @PrimaryKeyColumn(name = "user_id", ordinal = 0, type = PrimaryKeyType.PARTITIONED)
-    private UUID userId;
+    private UUID userId; // ID người dùng
 
     @PrimaryKeyColumn(name = "friend_id", ordinal = 1, type = PrimaryKeyType.CLUSTERED)
-    private UUID friendId;
+    private UUID friendId; // ID bạn bè
 
     @Column("friend_name")
-    private String friendName;
+    private String friendName; // Tên bạn bè
 
     @Column("friend_avatar")
-    private String friendAvatar;
+    private String friendAvatar; // Avatar bạn bè
 
-    private Instant since;
+    private Instant since; // Kết bạn từ ngày
 
     public UUID getUserId() {
         return userId;

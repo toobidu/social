@@ -9,7 +9,7 @@ import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn;
 import org.springframework.data.cassandra.core.mapping.Table;
 
 /**
- * Messages in a conversation.
+ * Tin nhắn trong một cuộc trò chuyện.
  */
 @Table("messages")
 public class Message extends AbstractAuditingEntity<Message> implements Serializable {
@@ -17,21 +17,21 @@ public class Message extends AbstractAuditingEntity<Message> implements Serializ
     private static final long serialVersionUID = 1L;
 
     @PrimaryKeyColumn(name = "conversation_id", ordinal = 0, type = PrimaryKeyType.PARTITIONED)
-    private UUID conversationId;
+    private UUID conversationId; // ID cuộc trò chuyện
 
     @PrimaryKeyColumn(name = "bucket", ordinal = 1, type = PrimaryKeyType.PARTITIONED)
-    private Integer bucket;
+    private Integer bucket; // Bucket để phân trang
 
     @PrimaryKeyColumn(name = "message_id", ordinal = 2, type = PrimaryKeyType.CLUSTERED, ordering = Ordering.ASCENDING)
-    private UUID messageId; // TimeUUID
+    private UUID messageId; // ID tin nhắn (TimeUUID)
 
     @Column("sender_id")
-    private UUID senderId;
+    private UUID senderId; // ID người gửi
 
-    private String content;
+    private String content; // Nội dung tin nhắn
 
     @Column("media_url")
-    private String mediaUrl;
+    private String mediaUrl; // URL media (nếu có)
 
     public UUID getConversationId() {
         return conversationId;

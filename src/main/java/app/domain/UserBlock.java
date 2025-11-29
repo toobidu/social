@@ -7,7 +7,7 @@ import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn;
 import org.springframework.data.cassandra.core.mapping.Table;
 
 /**
- * Blocked Users.
+ * Người dùng bị chặn.
  */
 @Table("user_blocks")
 public class UserBlock extends AbstractAuditingEntity<UserBlock> implements Serializable {
@@ -15,10 +15,10 @@ public class UserBlock extends AbstractAuditingEntity<UserBlock> implements Seri
     private static final long serialVersionUID = 1L;
 
     @PrimaryKeyColumn(name = "user_id", ordinal = 0, type = PrimaryKeyType.PARTITIONED)
-    private UUID userId;
+    private UUID userId; // ID người dùng thực hiện chặn
 
     @PrimaryKeyColumn(name = "blocked_user_id", ordinal = 1, type = PrimaryKeyType.CLUSTERED)
-    private UUID blockedUserId;
+    private UUID blockedUserId; // ID người bị chặn
 
     public UUID getUserId() {
         return userId;

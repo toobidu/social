@@ -11,7 +11,7 @@ import org.springframework.data.cassandra.core.mapping.PrimaryKey;
 import org.springframework.data.cassandra.core.mapping.Table;
 
 /**
- * A Post.
+ * Bài viết.
  */
 @Table("posts")
 public class Post extends AbstractAuditingEntity<Post> implements Serializable {
@@ -19,23 +19,23 @@ public class Post extends AbstractAuditingEntity<Post> implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @PrimaryKey("post_id")
-    private UUID postId;
+    private UUID postId; // ID bài viết
 
     @Column("user_id")
-    private UUID userId;
+    private UUID userId; // ID người đăng
 
-    private String content;
+    private String content; // Nội dung bài viết
 
     @Column("media_urls")
-    private List<String> mediaUrls;
+    private List<String> mediaUrls; // Danh sách URL media
 
     @Column("media_type")
-    private MediaType mediaType; // IMAGE, VIDEO, ALBUM
+    private MediaType mediaType; // Loại media (IMAGE, VIDEO, ALBUM)
 
     @Column("privacy_level")
-    private PrivacyLevel privacyLevel; // PUBLIC, FRIENDS, PRIVATE
+    private PrivacyLevel privacyLevel; // Mức độ riêng tư (PUBLIC, FRIENDS, PRIVATE)
 
-    private PostStatus status; // ACTIVE, DELETED, ARCHIVED
+    private PostStatus status; // Trạng thái (ACTIVE, DELETED, ARCHIVED)
 
     public UUID getPostId() {
         return postId;

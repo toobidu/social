@@ -9,7 +9,7 @@ import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn;
 import org.springframework.data.cassandra.core.mapping.Table;
 
 /**
- * Who liked a post?
+ * Ai đã thích bài viết?
  */
 @Table("post_likes")
 public class PostLike implements Serializable {
@@ -17,16 +17,16 @@ public class PostLike implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @PrimaryKeyColumn(name = "post_id", ordinal = 0, type = PrimaryKeyType.PARTITIONED)
-    private UUID postId;
+    private UUID postId; // ID bài viết
 
     @PrimaryKeyColumn(name = "user_id", ordinal = 1, type = PrimaryKeyType.CLUSTERED)
-    private UUID userId;
+    private UUID userId; // ID người thích
 
     @Column("user_name")
-    private String userName;
+    private String userName; // Tên người thích
 
     @Column("liked_at")
-    private Instant likedAt;
+    private Instant likedAt; // Thời gian thích
 
     public UUID getPostId() {
         return postId;

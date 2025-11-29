@@ -8,7 +8,7 @@ import org.springframework.data.cassandra.core.mapping.PrimaryKey;
 import org.springframework.data.cassandra.core.mapping.Table;
 
 /**
- * Metadata for a conversation (1-on-1 or Group).
+ * Metadata cho một cuộc trò chuyện (1-1 hoặc Nhóm).
  */
 @Table("conversations")
 public class Conversation extends AbstractAuditingEntity<Conversation> implements Serializable {
@@ -16,15 +16,15 @@ public class Conversation extends AbstractAuditingEntity<Conversation> implement
     private static final long serialVersionUID = 1L;
 
     @PrimaryKey("conversation_id")
-    private UUID conversationId;
+    private UUID conversationId; // ID cuộc trò chuyện
 
-    private String name;
+    private String name; // Tên cuộc trò chuyện (nếu là nhóm)
 
     @Column("is_group")
-    private Boolean isGroup;
+    private Boolean isGroup; // Là nhóm hay không
 
     @Column("participant_ids")
-    private Set<UUID> participantIds;
+    private Set<UUID> participantIds; // Danh sách ID người tham gia
 
     public UUID getConversationId() {
         return conversationId;

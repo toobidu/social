@@ -11,7 +11,7 @@ import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn;
 import org.springframework.data.cassandra.core.mapping.Table;
 
 /**
- * A Friend Request (Received).
+ * Lời mời kết bạn (Đã nhận).
  */
 @Table("friend_requests_received")
 public class FriendRequest implements Serializable {
@@ -19,21 +19,21 @@ public class FriendRequest implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @PrimaryKeyColumn(name = "receiver_id", ordinal = 0, type = PrimaryKeyType.PARTITIONED)
-    private UUID receiverId;
+    private UUID receiverId; // ID người nhận
 
     @PrimaryKeyColumn(name = "created_at", ordinal = 1, type = PrimaryKeyType.CLUSTERED, ordering = Ordering.DESCENDING)
-    private Instant createdAt;
+    private Instant createdAt; // Thời gian tạo
 
     @PrimaryKeyColumn(name = "sender_id", ordinal = 2, type = PrimaryKeyType.CLUSTERED)
-    private UUID senderId;
+    private UUID senderId; // ID người gửi
 
     @Column("sender_name")
-    private String senderName;
+    private String senderName; // Tên người gửi
 
     @Column("sender_avatar")
-    private String senderAvatar;
+    private String senderAvatar; // Avatar người gửi
 
-    private FriendRequestStatus status; // PENDING, REJECTED
+    private FriendRequestStatus status; // Trạng thái (PENDING, REJECTED)
 
     public UUID getReceiverId() {
         return receiverId;

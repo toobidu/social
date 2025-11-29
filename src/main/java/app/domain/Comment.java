@@ -9,7 +9,7 @@ import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn;
 import org.springframework.data.cassandra.core.mapping.Table;
 
 /**
- * Comments on a post.
+ * Bình luận trên một bài viết.
  */
 @Table("comments_by_post")
 public class Comment extends AbstractAuditingEntity<Comment> implements Serializable {
@@ -17,18 +17,18 @@ public class Comment extends AbstractAuditingEntity<Comment> implements Serializ
     private static final long serialVersionUID = 1L;
 
     @PrimaryKeyColumn(name = "post_id", ordinal = 0, type = PrimaryKeyType.PARTITIONED)
-    private UUID postId;
+    private UUID postId; // ID bài viết
 
     @PrimaryKeyColumn(name = "comment_id", ordinal = 1, type = PrimaryKeyType.CLUSTERED, ordering = Ordering.ASCENDING)
-    private UUID commentId;
+    private UUID commentId; // ID bình luận
 
     @Column("user_id")
-    private UUID userId;
+    private UUID userId; // ID người dùng bình luận
 
     @Column("user_name")
-    private String userName;
+    private String userName; // Tên người dùng bình luận
 
-    private String content;
+    private String content; // Nội dung bình luận
 
     public UUID getPostId() {
         return postId;

@@ -9,7 +9,7 @@ import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn;
 import org.springframework.data.cassandra.core.mapping.Table;
 
 /**
- * User's Inbox (List of conversations).
+ * Hộp thư của người dùng (Danh sách các cuộc trò chuyện).
  */
 @Table("user_conversations")
 public class UserConversation implements Serializable {
@@ -17,19 +17,19 @@ public class UserConversation implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @PrimaryKeyColumn(name = "user_id", ordinal = 0, type = PrimaryKeyType.PARTITIONED)
-    private UUID userId;
+    private UUID userId; // ID người dùng
 
     @PrimaryKeyColumn(name = "last_message_at", ordinal = 1, type = PrimaryKeyType.CLUSTERED, ordering = Ordering.DESCENDING)
-    private UUID lastMessageAt; // TimeUUID
+    private UUID lastMessageAt; // Thời gian tin nhắn cuối cùng (TimeUUID)
 
     @Column("conversation_id")
-    private UUID conversationId;
+    private UUID conversationId; // ID cuộc trò chuyện
 
     @Column("conversation_name")
-    private String conversationName;
+    private String conversationName; // Tên cuộc trò chuyện
 
     @Column("unread_count")
-    private Integer unreadCount;
+    private Integer unreadCount; // Số tin nhắn chưa đọc
 
     public UUID getUserId() {
         return userId;

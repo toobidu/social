@@ -9,8 +9,8 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.cassandra.core.mapping.Column;
 
 /**
- * Base abstract class for entities which will hold definitions for created, last modified, created by,
- * last modified by attributes.
+ * Lớp trừu tượng cơ sở cho các thực thể, chứa các định nghĩa cho thuộc tính tạo, sửa đổi lần cuối,
+ * người tạo, người sửa đổi lần cuối.
  */
 public abstract class AbstractAuditingEntity<T> implements Serializable {
 
@@ -18,19 +18,19 @@ public abstract class AbstractAuditingEntity<T> implements Serializable {
 
     @CreatedBy
     @Column("created_by")
-    private String createdBy;
+    private String createdBy; // Người tạo
 
     @CreatedDate
     @Column("created_date")
-    private Instant createdDate = Instant.now();
+    private Instant createdDate = Instant.now(); // Ngày tạo
 
     @LastModifiedBy
     @Column("last_modified_by")
-    private String lastModifiedBy;
+    private String lastModifiedBy; // Người sửa đổi lần cuối
 
     @LastModifiedDate
     @Column("last_modified_date")
-    private Instant lastModifiedDate = Instant.now();
+    private Instant lastModifiedDate = Instant.now(); // Ngày sửa đổi lần cuối
 
     public String getCreatedBy() {
         return createdBy;

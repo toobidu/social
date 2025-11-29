@@ -35,7 +35,7 @@ spring:
     compression: LZ4
     keyspace-name: chatapp
     local-datacenter: datacenter1
-    schema-action: CREATE_IF_NOT_EXISTS
+    schema-action: RECREATE_DROP_UNUSED
     request:
       timeout: 10s
     connection:

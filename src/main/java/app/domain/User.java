@@ -17,7 +17,7 @@ import org.springframework.data.cassandra.core.mapping.PrimaryKey;
 import org.springframework.data.cassandra.core.mapping.Table;
 
 /**
- * A user.
+ * Người dùng.
  */
 @Table("user")
 public class User implements Serializable {
@@ -25,56 +25,69 @@ public class User implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @PrimaryKey
-    private String id;
+    private String id; // ID người dùng
 
     @NotNull
     @Pattern(regexp = Constants.LOGIN_REGEX)
     @Size(min = 1, max = 50)
-    private String login;
+    private String login; // Tên đăng nhập
 
     @JsonIgnore
     @NotNull
     @Size(min = 60, max = 60)
-    private String password;
+    private String password; // Mật khẩu (đã mã hóa)
 
     @Size(max = 50)
-    private String firstName;
+    private String firstName; // Tên
 
     @Size(max = 50)
-    private String lastName;
+    private String lastName; // Họ
 
     @Email
     @Size(min = 5, max = 254)
-    private String email;
+    private String email; // Email
 
     @Size(max = 256)
     @Column("avatar_url")
-    private String avatarUrl;
+    private String avatarUrl; // URL ảnh đại diện
 
     @Size(max = 1000)
-    private String bio;
+    private String bio; // Giới thiệu bản thân
 
-    private boolean activated = false;
+    @Size(max = 20)
+    @Column("phone_number")
+    private String phoneNumber; // Số điện thoại
+
+    @Column("attributes")
+    private java.util.Map<String, String> attributes; // Thông tin động (Key-Value)
+
+    @Column("address")
+    private Address address; // Địa chỉ hiện tại
+
+    @Column("hometown")
+    private Address hometown; // Quê quán
+
+    private boolean activated = false; // Đã kích hoạt
 
     @Size(min = 2, max = 10)
     @Column("lang_key")
-    private String langKey;
+    private String langKey; // Ngôn ngữ
 
     @Size(max = 20)
     @Column("activation_key")
     @JsonIgnore
-    private String activationKey;
+    private String activationKey; // Mã kích hoạt
 
     @Size(max = 20)
     @Column("reset_key")
     @JsonIgnore
-    private String resetKey;
+    private String resetKey; // Mã đặt lại mật khẩu
 
     @Column("reset_date")
-    private Instant resetDate = null;
+    private Instant resetDate = null; // Ngày đặt lại mật khẩu
 
     @JsonIgnore
-    private Set<String> authorities = new HashSet<>();
+    private Set<String> authorities = new HashSet<>(); // Quyền hạn
 
     public String getId() {
         return id;
