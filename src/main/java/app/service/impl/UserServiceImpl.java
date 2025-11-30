@@ -240,7 +240,7 @@ public class UserServiceImpl implements UserService {
                         .hasElement()
                         .flatMap(emailExists -> {
                             if (Boolean.TRUE.equals(emailExists)) {
-                                return Mono.error(new EmailAlreadyUsedException());
+                                return Mono.<User>error(new EmailAlreadyUsedException());
                             }
                             return Mono.just(user);
                         });
