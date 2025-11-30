@@ -3,6 +3,7 @@ package app.service;
 import app.IntegrationTest;
 import app.domain.User;
 import app.repository.UserRepository;
+import app.service.interfaces.UserService;
 import java.util.UUID;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.AfterEach;

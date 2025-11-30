@@ -35,6 +35,10 @@ public class AdminUserDTO implements Serializable {
     @Size(min = 2, max = 10)
     private String langKey;
 
+    private String avatarUrl;
+    private String bio;
+    private String phoneNumber;
+
     private Set<String> authorities;
 
     public AdminUserDTO() {
@@ -49,6 +53,9 @@ public class AdminUserDTO implements Serializable {
         this.email = user.getEmail();
         this.activated = user.isActivated();
         this.langKey = user.getLangKey();
+        this.avatarUrl = user.getAvatarUrl();
+        this.bio = user.getBio();
+        this.phoneNumber = user.getPhoneNumber();
         this.authorities = user.getAuthorities();
     }
 
@@ -114,6 +121,30 @@ public class AdminUserDTO implements Serializable {
 
     public void setAuthorities(Set<String> authorities) {
         this.authorities = authorities;
+    }
+
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
+
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
+    }
+
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     // prettier-ignore

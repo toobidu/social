@@ -270,6 +270,11 @@
         <artifactId>spring-graphql-test</artifactId>
         <scope>test</scope>
       </dependency>
+      <dependency>
+        <groupId>io.projectreactor</groupId>
+        <artifactId>reactor-test</artifactId>
+        <scope>test</scope>
+      </dependency>
     </dependencies>
 
     <build>
@@ -410,6 +415,10 @@
                             <path>
                                 <groupId>org.apache.cassandra</groupId>
                                 <artifactId>java-driver-mapper-processor</artifactId>
+                            </path>
+                            <path>
+                                <groupId>org.projectlombok</groupId>
+                                <artifactId>lombok</artifactId>
                             </path>
                         </annotationProcessorPaths>
                     </configuration>

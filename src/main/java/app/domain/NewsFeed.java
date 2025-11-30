@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.UUID;
 import org.springframework.data.cassandra.core.cql.Ordering;
 import org.springframework.data.cassandra.core.cql.PrimaryKeyType;
+import org.springframework.data.cassandra.core.mapping.CassandraType;
 import org.springframework.data.cassandra.core.mapping.Column;
 import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn;
 import org.springframework.data.cassandra.core.mapping.Table;
@@ -20,6 +21,7 @@ public class NewsFeed implements Serializable {
     private UUID userId; // ID người dùng (chủ sở hữu bảng tin)
 
     @PrimaryKeyColumn(name = "post_id", ordinal = 1, type = PrimaryKeyType.CLUSTERED, ordering = Ordering.DESCENDING)
+    @CassandraType(type = CassandraType.Name.TIMEUUID)
     private UUID postId; // ID bài viết
 
     @Column("author_id")

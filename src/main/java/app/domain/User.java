@@ -10,6 +10,7 @@ import java.io.Serializable;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.cassandra.core.mapping.Column;
@@ -28,7 +29,7 @@ public class User implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @PrimaryKey
-    private String id; // ID người dùng
+    private String id;
 
     @NotNull
     @Pattern(regexp = Constants.LOGIN_REGEX)
@@ -39,40 +40,40 @@ public class User implements Serializable {
     @JsonIgnore
     @NotNull
     @Size(min = 60, max = 60)
-    private String password; // Mật khẩu (đã mã hóa)
+    private String password;
 
     @Size(max = 50)
-    private String firstName; // Tên
+    private String firstName;
 
     @Size(max = 50)
-    private String lastName; // Họ
+    private String lastName;
 
     @Email
     @Size(min = 5, max = 254)
     @Indexed
-    private String email; // Email
+    private String email;
 
     @Size(max = 256)
     @Column("avatar_url")
-    private String avatarUrl; // URL ảnh đại diện
+    private String avatarUrl;
 
     @Size(max = 1000)
-    private String bio; // Giới thiệu bản thân
+    private String bio;
 
     @Size(max = 20)
     @Column("phone_number")
-    private String phoneNumber; // Số điện thoại
+    private String phoneNumber;
 
     @Column("attributes")
-    private java.util.Map<String, String> attributes; // Thông tin động (Key-Value)
+    private Map<String, String> attributes; // Thông tin động
 
     @Column("address")
-    private Address address; // Địa chỉ hiện tại
+    private Address address;
 
     @Column("hometown")
-    private Address hometown; // Quê quán
+    private Address hometown;
 
-    private boolean activated = false; // Đã kích hoạt
+    private boolean activated = false;
 
     @Size(min = 2, max = 10)
     @Column("lang_key")
@@ -159,6 +160,30 @@ public class User implements Serializable {
 
     public void setBio(String bio) {
         this.bio = bio;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
+    public Address getHometown() {
+        return hometown;
+    }
+
+    public void setHometown(Address hometown) {
+        this.hometown = hometown;
     }
 
     public boolean isActivated() {

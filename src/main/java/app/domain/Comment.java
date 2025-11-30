@@ -28,6 +28,9 @@ public class Comment extends AbstractAuditingEntity<Comment> implements Serializ
     @Column("user_name")
     private String userName; // Tên người dùng bình luận
 
+    @Column("user_avatar")
+    private String userAvatar; // Avatar người dùng bình luận
+
     private String content; // Nội dung bình luận
 
     public UUID getPostId() {
@@ -60,6 +63,14 @@ public class Comment extends AbstractAuditingEntity<Comment> implements Serializ
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public String getUserAvatar() {
+        return userAvatar;
+    }
+
+    public void setUserAvatar(String userAvatar) {
+        this.userAvatar = userAvatar;
     }
 
     public String getContent() {

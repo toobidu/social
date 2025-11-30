@@ -6,7 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import app.IntegrationTest;
 import app.domain.User;
 import app.repository.UserRepository;
-import app.service.UserService;
+import app.service.interfaces.UserService;
 import java.util.Locale;
 import java.util.UUID;
 import org.apache.commons.lang3.RandomStringUtils;

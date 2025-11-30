@@ -7,6 +7,7 @@ import static org.mockito.Mockito.*;
 import app.IntegrationTest;
 import app.config.Constants;
 import app.domain.User;
+import app.service.interfaces.MailService;
 import jakarta.mail.Multipart;
 import jakarta.mail.Session;
 import jakarta.mail.internet.MimeBodyPart;

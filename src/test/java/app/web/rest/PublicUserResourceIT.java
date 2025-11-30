@@ -4,7 +4,7 @@ import app.IntegrationTest;
 import app.domain.User;
 import app.repository.UserRepository;
 import app.security.AuthoritiesConstants;
-import app.service.UserService;
+import app.service.interfaces.UserService;
 import java.util.Set;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

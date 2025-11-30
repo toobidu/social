@@ -1,6 +1,7 @@
-package app.service;
+package app.service.impl;
 
 import app.domain.User;
+import app.service.interfaces.MailService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import java.nio.charset.StandardCharsets;
@@ -18,12 +19,12 @@ import reactor.core.publisher.Mono;
 import tech.jhipster.config.JHipsterProperties;
 
 /**
- * Service for sending emails asynchronously.
+ * Service Implementation for sending emails asynchronously.
  */
 @Service
-public class MailService {
+public class MailServiceImpl implements MailService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(MailService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MailServiceImpl.class);
 
     private static final String USER = "user";
 
@@ -37,7 +38,7 @@ public class MailService {
 
     private final SpringTemplateEngine templateEngine;
 
-    public MailService(
+    public MailServiceImpl(
         JHipsterProperties jHipsterProperties,
         JavaMailSender javaMailSender,
         MessageSource messageSource,
@@ -49,6 +50,7 @@ public class MailService {
         this.templateEngine = templateEngine;
     }
 
+    @Override
     public void sendEmail(String to, String subject, String content, boolean isMultipart, boolean isHtml) {
         Mono.defer(() -> {
             sendEmailSync(to, subject, content, isMultipart, isHtml);
@@ -81,6 +83,7 @@ public class MailService {
         }
     }
 
+    @Override
     public void sendEmailFromTemplate(User user, String templateName, String titleKey) {
         Mono.defer(() -> {
             sendEmailFromTemplateSync(user, templateName, titleKey);
@@ -102,16 +105,19 @@ public class MailService {
         sendEmailSync(user.getEmail(), subject, content, false, true);
     }
 
+    @Override
     public void sendActivationEmail(User user) {
         LOG.debug("Sending activation email to '{}'", user.getEmail());
         sendEmailFromTemplate(user, "mail/activationEmail", "email.activation.title");
     }
 
+    @Override
     public void sendCreationEmail(User user) {
         LOG.debug("Sending creation email to '{}'", user.getEmail());
         sendEmailFromTemplate(user, "mail/creationEmail", "email.activation.title");
     }
 
+    @Override
     public void sendPasswordResetMail(User user) {
         LOG.debug("Sending password reset email to '{}'", user.getEmail());
         sendEmailFromTemplate(user, "mail/passwordResetEmail", "email.reset.title");

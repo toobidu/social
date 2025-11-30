@@ -6,6 +6,7 @@ import app.domain.enumeration.PrivacyLevel;
 import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
+import org.springframework.data.cassandra.core.mapping.CassandraType;
 import org.springframework.data.cassandra.core.mapping.Column;
 import org.springframework.data.cassandra.core.mapping.PrimaryKey;
 import org.springframework.data.cassandra.core.mapping.Table;
@@ -21,6 +22,7 @@ public class Post extends AbstractAuditingEntity<Post> implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @PrimaryKey("post_id")
+    @CassandraType(type = CassandraType.Name.TIMEUUID)
     private UUID postId; // ID bài viết
 
     @Column("user_id")

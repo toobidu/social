@@ -1,11 +1,9 @@
 package app.web.rest;
 
-import app.repository.UserRepository;
-import app.security.SecurityUtils;
-import app.service.MailService;
-import app.service.UserService;
 import app.service.dto.AdminUserDTO;
 import app.service.dto.PasswordChangeDTO;
+import app.service.interfaces.MailService;
+import app.service.interfaces.UserService;
 import app.web.rest.errors.*;
 import app.web.rest.vm.KeyAndPasswordVM;
 import app.web.rest.vm.ManagedUserVM;
@@ -34,14 +32,11 @@ public class AccountResource {
 
     private static final Logger LOG = LoggerFactory.getLogger(AccountResource.class);
 
-    private final UserRepository userRepository;
-
     private final UserService userService;
 
     private final MailService mailService;
 
-    public AccountResource(UserRepository userRepository, UserService userService, MailService mailService) {
-        this.userRepository = userRepository;
+    public AccountResource(UserService userService, MailService mailService) {
         this.userService = userService;
         this.mailService = mailService;
     }
@@ -100,23 +95,7 @@ public class AccountResource {
      */
     @PostMapping("/account")
     public Mono<Void> saveAccount(@Valid @RequestBody AdminUserDTO userDTO) {
-        return SecurityUtils.getCurrentUserLogin()
-            .switchIfEmpty(Mono.error(new AccountResourceException("Current user login not found")))
-            .flatMap(userLogin ->
-                userRepository
-                    .findOneByEmailIgnoreCase(userDTO.getEmail())
-                    .filter(existingUser -> !existingUser.getLogin().equalsIgnoreCase(userLogin))
-                    .hasElement()
-                    .flatMap(emailExists -> {
-                        if (emailExists) {
-                            throw new EmailAlreadyUsedException();
-                        }
-                        return userRepository.findOneByLogin(userLogin);
-                    })
-            )
-            .switchIfEmpty(Mono.error(new AccountResourceException("User could not be found")))
-            .flatMap(user -> userService.updateUser(userDTO.getFirstName(), userDTO.getLastName(), userDTO.getEmail(), userDTO.getLangKey())
-            );
+        return userService.updateAccount(userDTO);
     }
 
     /**

@@ -1,12 +1,17 @@
-package app.service;
+package app.service.impl;
 
 import app.config.Constants;
 import app.domain.User;
 import app.repository.UserRepository;
+import app.repository.search.UserSearchRepository;
 import app.security.AuthoritiesConstants;
 import app.security.SecurityUtils;
 import app.service.dto.AdminUserDTO;
 import app.service.dto.UserDTO;
+import app.service.interfaces.UserService;
+import app.web.rest.errors.EmailAlreadyUsedException;
+import app.web.rest.errors.InvalidPasswordException;
+import app.web.rest.errors.LoginAlreadyUsedException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -20,29 +25,26 @@ import reactor.core.scheduler.Schedulers;
 import tech.jhipster.security.RandomUtil;
 
 /**
- * Service class for managing users.
+ * Service Implementation for managing users.
  */
 @Service
-public class UserService {
+public class UserServiceImpl implements UserService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(UserService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(UserServiceImpl.class);
 
     private final UserRepository userRepository;
 
-    private final app.repository.search.UserSearchRepository userSearchRepository;
+    private final UserSearchRepository userSearchRepository;
 
     private final PasswordEncoder passwordEncoder;
 
-    public UserService(
-        UserRepository userRepository,
-        app.repository.search.UserSearchRepository userSearchRepository,
-        PasswordEncoder passwordEncoder
-    ) {
+    public UserServiceImpl(UserRepository userRepository, UserSearchRepository userSearchRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.userSearchRepository = userSearchRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
+    @Override
     public Mono<User> activateRegistration(String key) {
         LOG.debug("Activating user for activation key {}", key);
         return userRepository
@@ -56,6 +58,7 @@ public class UserService {
             .doOnNext(user -> LOG.debug("Activated user: {}", user));
     }
 
+    @Override
     public Mono<User> completePasswordReset(String newPassword, String key) {
         LOG.debug("Reset user password for reset key {}", key);
         return userRepository
@@ -71,6 +74,7 @@ public class UserService {
             .flatMap(this::saveUser);
     }
 
+    @Override
     public Mono<User> requestPasswordReset(String mail) {
         return userRepository
             .findOneByEmailIgnoreCase(mail)
@@ -84,6 +88,7 @@ public class UserService {
             .flatMap(this::saveUser);
     }
 
+    @Override
     public Mono<User> registerUser(AdminUserDTO userDTO, String password) {
         return userRepository
             .findOneByLogin(userDTO.getLogin().toLowerCase())
@@ -91,7 +96,7 @@ public class UserService {
                 if (!existingUser.isActivated()) {
                     return userRepository.delete(existingUser);
                 } else {
-                    return Mono.error(new UsernameAlreadyUsedException());
+                    return Mono.error(new LoginAlreadyUsedException());
                 }
             })
             .then(userRepository.findOneByEmailIgnoreCase(userDTO.getEmail()))
@@ -132,44 +137,71 @@ public class UserService {
             });
     }
 
+    @Override
     public Mono<User> createUser(AdminUserDTO userDTO) {
-        User user = new User();
-        user.setId(UUID.randomUUID().toString());
-        user.setLogin(userDTO.getLogin().toLowerCase());
-        user.setFirstName(userDTO.getFirstName());
-        user.setLastName(userDTO.getLastName());
-        if (userDTO.getEmail() != null) {
-            user.setEmail(userDTO.getEmail().toLowerCase());
-        }
-        if (userDTO.getLangKey() == null) {
-            user.setLangKey(Constants.DEFAULT_LANGUAGE); // default language
-        } else {
-            user.setLangKey(userDTO.getLangKey());
-        }
-        user.setAuthorities(userDTO.getAuthorities());
-        return Mono.just(user)
-            .publishOn(Schedulers.boundedElastic())
-            .map(newUser -> {
-                String encryptedPassword = passwordEncoder.encode(RandomUtil.generatePassword());
-                newUser.setPassword(encryptedPassword);
-                newUser.setResetKey(RandomUtil.generateResetKey());
-                newUser.setResetDate(Instant.now());
-                newUser.setActivated(true);
-                return newUser;
+        return userRepository
+            .findOneByLogin(userDTO.getLogin().toLowerCase())
+            .hasElement()
+            .flatMap(loginExists -> {
+                if (Boolean.TRUE.equals(loginExists)) {
+                    return Mono.error(new LoginAlreadyUsedException());
+                }
+                return userRepository.findOneByEmailIgnoreCase(userDTO.getEmail());
             })
-            .flatMap(this::saveUser)
-            .doOnNext(user1 -> LOG.debug("Created Information for User: {}", user1));
+            .hasElement()
+            .flatMap(emailExists -> {
+                if (Boolean.TRUE.equals(emailExists)) {
+                    return Mono.error(new EmailAlreadyUsedException());
+                }
+                User user = new User();
+                user.setId(UUID.randomUUID().toString());
+                user.setLogin(userDTO.getLogin().toLowerCase());
+                user.setFirstName(userDTO.getFirstName());
+                user.setLastName(userDTO.getLastName());
+                if (userDTO.getEmail() != null) {
+                    user.setEmail(userDTO.getEmail().toLowerCase());
+                }
+                if (userDTO.getLangKey() == null) {
+                    user.setLangKey(Constants.DEFAULT_LANGUAGE); // default language
+                } else {
+                    user.setLangKey(userDTO.getLangKey());
+                }
+                user.setAuthorities(userDTO.getAuthorities());
+                return Mono.just(user)
+                    .publishOn(Schedulers.boundedElastic())
+                    .map(newUser -> {
+                        String encryptedPassword = passwordEncoder.encode(RandomUtil.generatePassword());
+                        newUser.setPassword(encryptedPassword);
+                        newUser.setResetKey(RandomUtil.generateResetKey());
+                        newUser.setResetDate(Instant.now());
+                        newUser.setActivated(true);
+                        return newUser;
+                    })
+                    .flatMap(this::saveUser)
+                    .doOnNext(user1 -> LOG.debug("Created Information for User: {}", user1));
+            });
     }
 
-    /**
-     * Update all information for a specific user, and return the modified user.
-     *
-     * @param userDTO user to update.
-     * @return updated user.
-     */
+    @Override
     public Mono<AdminUserDTO> updateUser(AdminUserDTO userDTO) {
         return userRepository
-            .findById(userDTO.getId())
+            .findOneByEmailIgnoreCase(userDTO.getEmail())
+            .filter(user -> !user.getId().equals(userDTO.getId()))
+            .hasElement()
+            .flatMap(emailExists -> {
+                if (Boolean.TRUE.equals(emailExists)) {
+                    return Mono.error(new EmailAlreadyUsedException());
+                }
+                return userRepository.findOneByLogin(userDTO.getLogin().toLowerCase());
+            })
+            .filter(user -> !user.getId().equals(userDTO.getId()))
+            .hasElement()
+            .flatMap(loginExists -> {
+                if (Boolean.TRUE.equals(loginExists)) {
+                    return Mono.error(new LoginAlreadyUsedException());
+                }
+                return userRepository.findById(userDTO.getId());
+            })
             .map(user -> {
                 user.setLogin(userDTO.getLogin().toLowerCase());
                 user.setFirstName(userDTO.getFirstName());
@@ -187,6 +219,7 @@ public class UserService {
             .map(AdminUserDTO::new);
     }
 
+    @Override
     public Mono<Void> deleteUser(String login) {
         return userRepository
             .findOneByLogin(login)
@@ -195,25 +228,35 @@ public class UserService {
             .then();
     }
 
-    /**
-     * Update basic information (first name, last name, email, language) for the current user.
-     *
-     * @param firstName first name of user.
-     * @param lastName  last name of user.
-     * @param email     email id of user.
-     * @param langKey   language key.
-     * @return a completed {@link Mono}.
-     */
-    public Mono<Void> updateUser(String firstName, String lastName, String email, String langKey) {
+    @Override
+    public Mono<Void> updateAccount(AdminUserDTO userDTO) {
         return SecurityUtils.getCurrentUserLogin()
             .flatMap(userRepository::findOneByLogin)
             .flatMap(user -> {
-                user.setFirstName(firstName);
-                user.setLastName(lastName);
-                if (email != null) {
-                    user.setEmail(email.toLowerCase());
+                if (userDTO.getEmail() != null) {
+                    return userRepository
+                        .findOneByEmailIgnoreCase(userDTO.getEmail())
+                        .filter(existingUser -> !existingUser.getLogin().equalsIgnoreCase(user.getLogin()))
+                        .hasElement()
+                        .flatMap(emailExists -> {
+                            if (Boolean.TRUE.equals(emailExists)) {
+                                return Mono.error(new EmailAlreadyUsedException());
+                            }
+                            return Mono.just(user);
+                        });
                 }
-                user.setLangKey(langKey);
+                return Mono.just(user);
+            })
+            .flatMap(user -> {
+                user.setFirstName(userDTO.getFirstName());
+                user.setLastName(userDTO.getLastName());
+                if (userDTO.getEmail() != null) {
+                    user.setEmail(userDTO.getEmail().toLowerCase());
+                }
+                user.setLangKey(userDTO.getLangKey());
+                user.setAvatarUrl(userDTO.getAvatarUrl());
+                user.setBio(userDTO.getBio());
+                user.setPhoneNumber(userDTO.getPhoneNumber());
                 return saveUser(user);
             })
             .doOnNext(user -> LOG.debug("Changed Information for User: {}", user))
@@ -224,6 +267,7 @@ public class UserService {
         return userRepository.save(user).flatMap(savedUser -> userSearchRepository.save(savedUser).thenReturn(savedUser));
     }
 
+    @Override
     public Mono<Void> changePassword(String currentClearTextPassword, String newPassword) {
         return SecurityUtils.getCurrentUserLogin()
             .flatMap(userRepository::findOneByLogin)
@@ -242,18 +286,22 @@ public class UserService {
             .then();
     }
 
+    @Override
     public Flux<AdminUserDTO> getAllManagedUsers() {
         return userRepository.findAll().map(AdminUserDTO::new);
     }
 
+    @Override
     public Flux<UserDTO> getAllPublicUsers() {
         return userRepository.findAll().filter(user -> user.isActivated()).map(UserDTO::new);
     }
 
+    @Override
     public Mono<User> getUserWithAuthoritiesByLogin(String login) {
         return userRepository.findOneByLogin(login);
     }
 
+    @Override
     public Mono<User> getUserWithAuthorities() {
         return SecurityUtils.getCurrentUserLogin().flatMap(userRepository::findOneByLogin);
     }
